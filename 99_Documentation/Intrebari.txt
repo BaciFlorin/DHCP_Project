@@ -1,0 +1,10 @@
+1. Ce trebuie sa contina log-ul unui server DHCP?  Ce fel de informatii?
+2. Ce semnifica un pool de adrese configurabil, ce parametrii se pot configura?
+3. Va trebui cumva sa facem ceva grafic in care sa apara ce clienti au primit adrese si resursele necesare?
+4. Pot aparea coliziuni in cazul acestei retele, e nevoie sa le rezolvam noi?
+5. Serverul nostru va trebuie sa cauzeze retrimiterea mesajului de request in caz de respingere a cererii sau trebuie doar sa o ignore si sa lase clientul sa isi
+seteze un timer la expirarea acestuia retrimitandu-se mesajul?
+6. Cum obtin parametrii necesari pentru configurarea clientului pe care trebuie sa ii trimit in ultimul pachet? 
+7. Strucutra mesajelor pe care le primim e mereu aceeasi sau trebuie configurata? Cumva ea respecta un protocol?
+8. BOOTP realay agent: ce inseamna si cum il folosim?
+9. Cum realizam comunicatia intre client si server, cum creeam un canal de comunicatie?
