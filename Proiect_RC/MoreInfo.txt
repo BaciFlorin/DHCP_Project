@@ -1,0 +1,27 @@
+    def __init__(self, _op, _htype, _hlen, _hops, _xid, _secs, _flags, _ciaddr, _yiaddr, _siaddr, _giaddr, _chaddr, _sname, _file, _options):
+        self.op = _op			01
+        self.htype = _htype		01
+        self.hlen = _hlen		06
+        self.hops = _hops		00
+        self.xid = _xid			AABBCCDD
+        self.secs = _secs		0300
+        self.flags = _flags		8000
+        self.ciaddr = _ciaddr		C0A864EE
+        self.yiaddr = _yiaddr		C0A864C1
+        self.siaddr = _siaddr		C0A864AB
+        self.giaddr = _giaddr		C0A86412
+        self.chaddr = _chaddr		7C7635E2FD3D00000000000000000000
+        self.sname = _sname		416e6472656920202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020
+        self.file = _file		67656e6572696320202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020
+        self.options = _options		0104FFFFFFA4FF
+					0308C0A86446C0A864A3FF
+					0604C0A86445FF
+					15085461746142616359FF
+					2804C0A864C7FF
+					530103FF
+					5404C0A864B6FF
+					580400011940FF
+
+
+
+
