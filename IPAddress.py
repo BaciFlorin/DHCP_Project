@@ -1,27 +1,33 @@
 
 class IPAddress():
     def __init__(self,_ip):
-        self.ip=_ip
-        self.mac=0x000000000000
-        self.oldmac=0x000000000000
-        self.leaseTime=0
-        self.free=1
-        self.hold=0
+        self.ip = _ip
+        self.mac = ""
+        self.oldmac = ""
+        self.leaseTime = 5000
+        self.free = 1
+        self.hold = 0
+        self.options = {}
         #aici e ok sa pui si optiunile si paramentrii de configurare, sa ii ai
 
-    def setMac(self,_mac):
-        self.mac=_mac
+    def setMac(self, _mac):
+        self.mac = _mac
 
-    def ocupy(self):
-        self.free=0
+    def setAddress(self):
+        self.free = 0
 
-    def reserve(self):
-        self.hold=1
+    def holdAddress(self):
+        self.hold = 1
 
-    def unocupy(self):
-        self.free=1
+    def unsetAddress(self):
+        self.free = 1
+        #tinem minte ultima statie care a avut adresa
+        self.oldmac = self.mac
 
-    def unreserve(self):
-        self.hold=0
+    def releaseAddress(self):
+        self.hold = 0
+
+    def setLeaseTime(self, _leaseTime):
+        self.leaseTime = _leaseTime
 
 
