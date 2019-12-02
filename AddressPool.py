@@ -4,23 +4,24 @@ from IPAddress import *
 class AddressPool():
     def __init__(self, _ipAddress, _mask):
         self.ips = []
-        ip = []
-        invertedMask = []
-        nrIps = 0
+        self.ip = []
+        self.invertedMask = []
+        self.nrIps = 0
+
 
         for x in _ipAddress.split('.'):
-            ip.append(int(x))
+            self.ip.append(int(x))
 
         for x in _mask.split('.'):
-            invertedMask.append(255-int(x))
+            self.invertedMask.append(255-int(x))
 
         #calculul numarului de ips din spatiu
         for i in range(0,4):
-            if invertedMask[i] != 0:
-                nrIps += invertedMask[i]*pow(2,8*(3-i))
+            if self.invertedMask[i] != 0:
+                self.nrIps += self.invertedMask[i]*pow(2,8*(3-i))
 
         #aici se contruieste vectorul in care am toate adresele ip disponibile
-        for i in range (1,nrIps):
+        for i in range (1,self.nrIps):
             ip[3] += 1
             if ip[3] > 255:
                 ip[3] = 0

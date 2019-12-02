@@ -33,7 +33,7 @@ class SenderHandler(threading.Thread):
         self.messageSend(message)
 
     def identifieMessage(self,options):
-        type = "DHCPDISCOVER"
+        type = 0
         if 53 in options:
             type = options[53]
         else:
@@ -43,6 +43,8 @@ class SenderHandler(threading.Thread):
 
     def modifyMessage(self, typeOfMessage, message):
         if typeOfMessage=='DHCPDISCOVER':
+            #sa ai grija si la cazurile in care se retrimite un DHCPDISCOVERY
+            self.clients.append(message.xid)
             message.op = '02'
             oldIp = self.pool.findOldAdress(message.chaddr)
             alocatedAddress=0
@@ -79,6 +81,9 @@ class SenderHandler(threading.Thread):
                 message.yiaddr = newIp.ip
                 alocatedAddress=newIp
 
+            alocatedAddress.optionsDiscovery = message.options.values()
+            alocatedAddress.xid=message.xid
+
             if 51 in message.options:
                 requestedLeaseTime = message.options[51]
                 clientIp=self.pool.findAddressMAC(message.chaddr)
@@ -95,15 +100,70 @@ class SenderHandler(threading.Thread):
             for i in message.options.keys():
                 if i != 50 and i != 53 and i != 51:
                     message.options[i] = configurations[i]
-            alocatedAddress.options = message.options
+                if i == 50 or i == 61 or i == 55:
+                    message.pop(i)
+            alocatedAddress.optionsSend=message.options
+
         elif typeOfMessage == 'DHCPREQUEST':
+            ipAlocated = self.pool.findAddressMAC(message.chaddr)
+            ok = True
+            # nu mai verifici xid deoarece clientul este obligat sa puna acelasi
+            for option in ipAlocated.optionsDiscovery:
+                if option not in message.options:
+                    ok = False
+                    break
+            if ok == True:
+                if 54 in message.options:
+                    #mesajul e un raspuns la DHCPOFFER
+                    error = "ok"
+                    if ipAlocated.ip == message.options[50] and message.ciaddr == 0:
+                        #SELECTING STATE
+                        if configurations[54] != message.options[54]:
+                            ipAlocated.releaseAddress()
+                            error = "Another server"
+
+                    if error == "ok":
+                        message.op = '02'
+                        message.yiaddr = ipAlocated.ip
+                        message.options = ipAlocated.optionsSend
+                        message.options[53] = 'DHCPACK'
+                else:
+                    error= "ok"
+                    if message.ciaddr == '':
+                        # INIT REBOOT
+                        if message.options[50] != ipAlocated.ip:
+                            error = "Ip doesn't match"
+                        tempip = message.options[50]
+                        tempip = tempip.split('.')
+                        for i in range(0, 3):
+                            tempip[i] = int(tempip)
+                            if 255 - self.pool.invertedMask[i] == 255:
+                                if tempip[i] != self.pool.ip[i]:
+                                    error = "Not the same network"
+                            else:
+                                if tempip[i] & (255 - self.pool.invertedMask[i]) != self.pool.ip[i]:
+                                    error = "Not the same network"
+                    elif 50 not in message.options:
+                        pass
+                    #renewing
+
+
+        elif typeOfMessage == 'DHCPDECLINE':
             pass
-        elif typeOfMessage == '':
+        elif typeOfMessage == 'DHCPRELEASE':
             pass
+        elif typeOfMessage == 'DHCPINFORM':
+            pass
+        else:
+            pass
+            #log error
         return message
 
 
 
 
     def messageSend(self,message):
-        pass
+        #broadcast la dhcpnak
+        #ciaddr la renewing
+        if message != 0:
+            pass
