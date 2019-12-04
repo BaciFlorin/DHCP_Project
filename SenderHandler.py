@@ -13,23 +13,22 @@ configurations={
         58: 7220
     }
 
-class SenderHandler(threading.Thread):
-    def __init__(self, _queueOfMessages, _ip, _mask):
-        threading.Thread.__init__(self)
-        self.queueOfMessages = _queueOfMessages
-        self.clients = []
-        self.pool = AddressPool("192.168.128.0","255.255.128.0")
+class SenderHandler():
+    def __init__(self, _conn,_addr, _pool, _lock):
+        self.conn = _conn
+        self.addr = _addr
+        self.pool = _pool
+        self.lock = _lock
 
-    def test(self, message): # a fost start
+
+    def handle(self, message): # a fost start
         #while True:
         #citim doar daca exista ceva in coada
         #if not self.queueOfMessages.empty():
         #functie de care imi identifica tipul de actiune pe care trebuie sa o iau
         #functie care sa imi returneze ce mesaj sa fie trimis
-        #message = self.queueOfMessages.get()
         type = self.identifieMessage(message.options)
-        message=self.modifyMessage(type,message)
-        print(message.options)
+        message = self.modifyMessage(type, message)
         self.messageSend(message)
 
     def identifieMessage(self,options):
@@ -42,9 +41,9 @@ class SenderHandler(threading.Thread):
         return type
 
     def modifyMessage(self, typeOfMessage, message):
+        self.lock.acquire()
         if typeOfMessage=='DHCPDISCOVER':
             #sa ai grija si la cazurile in care se retrimite un DHCPDISCOVERY
-            self.clients.append(message.xid)
             message.op = '02'
             oldIp = self.pool.findOldAdress(message.chaddr)
             alocatedAddress=0
@@ -54,7 +53,7 @@ class SenderHandler(threading.Thread):
                     message.yiaddr = oldIp.ip
                     oldIp.setMac(message.chaddr)
                     oldIp.holdAddress()
-                    alocatedAddress=oldIp
+                    alocatedAddress = oldIp
                 else:
                     #log in care precizezi ca adresa veche nu este libere
                     pass
@@ -72,7 +71,10 @@ class SenderHandler(threading.Thread):
                         #log in care precizezi ca nu este libera adresa ceruta
                         pass
                 else:
-                    pass
+                    # cazul in care trebuie sa alocam o noua adresa
+                    newIp = self.pool.getFreeAddress(message.chaddr)
+                    message.yiaddr = newIp.ip
+                    alocatedAddress = newIp
                     #log in care precizezi ca nu este adresa aia in spatiul nostru
 
             else:
@@ -82,7 +84,6 @@ class SenderHandler(threading.Thread):
                 alocatedAddress=newIp
 
             alocatedAddress.optionsDiscovery = message.options.values()
-            alocatedAddress.xid=message.xid
 
             if 51 in message.options:
                 requestedLeaseTime = message.options[51]
@@ -106,27 +107,21 @@ class SenderHandler(threading.Thread):
 
         elif typeOfMessage == 'DHCPREQUEST':
             ipAlocated = self.pool.findAddressMAC(message.chaddr)
-            ok = True
-            # nu mai verifici xid deoarece clientul este obligat sa puna acelasi
-            for option in ipAlocated.optionsDiscovery:
-                if option not in message.options:
-                    ok = False
-                    break
-            if ok == True:
+            if ipAlocated != 0:
                 if 54 in message.options:
                     #mesajul e un raspuns la DHCPOFFER
                     error = "ok"
-                    if ipAlocated.ip == message.options[50] and message.ciaddr == 0:
+                    if ipAlocated.ip == message.options[50] and message.ciaddr == '':
                         #SELECTING STATE
                         if configurations[54] != message.options[54]:
                             ipAlocated.releaseAddress()
                             error = "Another server"
 
-                    if error == "ok":
-                        message.op = '02'
-                        message.yiaddr = ipAlocated.ip
-                        message.options = ipAlocated.optionsSend
-                        message.options[53] = 'DHCPACK'
+                        if error == "ok":
+                            message.op = '02'
+                            message.yiaddr = ipAlocated.ip
+                            message.options = ipAlocated.optionsSend
+                            message.options[53] = 'DHCPACK'
                 else:
                     error= "ok"
                     if message.ciaddr == '':
@@ -143,10 +138,21 @@ class SenderHandler(threading.Thread):
                             else:
                                 if tempip[i] & (255 - self.pool.invertedMask[i]) != self.pool.ip[i]:
                                     error = "Not the same network"
+                        if error == "Ip doesn't match" or error == "Not the same network":
+                            message.op = '02'
+                            message.yiaddr = ''
+                            message.options = {}
+                            message.options[53] = 'DHCPNACK'
+                            message.sname = ''
+                            message.siaddr = ''
+                            message.ciaddr = ''
+                            message.file = ''
+
                     elif 50 not in message.options:
                         pass
-                    #renewing
-
+                        #renewing
+            else:
+                message = 0
 
         elif typeOfMessage == 'DHCPDECLINE':
             pass
@@ -157,13 +163,11 @@ class SenderHandler(threading.Thread):
         else:
             pass
             #log error
+        self.lock.release()
+
         return message
 
-
-
-
     def messageSend(self,message):
-        #broadcast la dhcpnak
-        #ciaddr la renewing
-        if message != 0:
-            pass
+        pass
+        #if message != 0:
+            #self.conn.sendall(message.code())

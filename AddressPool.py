@@ -4,13 +4,12 @@ from IPAddress import *
 class AddressPool():
     def __init__(self, _ipAddress, _mask):
         self.ips = []
-        self.ip = []
+        ip = []
         self.invertedMask = []
         self.nrIps = 0
 
-
         for x in _ipAddress.split('.'):
-            self.ip.append(int(x))
+            ip.append(int(x))
 
         for x in _mask.split('.'):
             self.invertedMask.append(255-int(x))

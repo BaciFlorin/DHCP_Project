@@ -9,7 +9,6 @@ class IPAddress():
         self.hold = 0
         self.optionsDiscovery = []
         self.optionsSend = {}
-        self.xid = 0
         #aici e ok sa pui si optiunile si paramentrii de configurare, sa ii ai
 
     def setMac(self, _mac):
