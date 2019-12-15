@@ -17,6 +17,8 @@ class Options:
         6: "Empty",
         15: "Empty",
         28: "Empty",
+        50: "Empty",
+        51: "Empty",
         53: "Empty",
         54: "Empty",
         58: "Empty"
@@ -99,7 +101,12 @@ class Options:
                 #Broadcast Address Option
                 if i==28:
                     self.OptionsData[i] = self.ipAddrFormat(self.OptionsData[i])
-
+                #Requested IP Address
+                if i==50:
+                    self.OptionsData[i] = self.ipAddrFormat(self.OptionsData[i])
+                #Lease Time
+                if i==51:
+                    self.OptionsData[i] = int(self.OptionsData[i], base=16)
                 #DHCP Message Type
                 if i==53:
                     self.OptionsData[i] = self.DHCPMessageType[int(self.OptionsData[i],base = 10)]
