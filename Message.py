@@ -1,4 +1,7 @@
 import Options
+import logging
+
+logger = logging.getLogger("console_logger")
 
 class Message:
     fieldDimensions = {
@@ -103,26 +106,37 @@ class Message:
         #OPTIONS
         startIndex = endIndex
         endIndex += len(self.messageRecived) - 236
-        options=Options.Options(self.messageRecived[startIndex:endIndex])
+        options = Options.Options(self.messageRecived[startIndex:endIndex], self.xid)
         options.optionSplit()
         self.options = options.OptionsData
 
+        err = self.verifyMessage()
+        if err == -1:
+            return -1
+        else:
+            return 0
+
     def ipAddrFormat(self, address):
         if len(address) != 8:
-            print("Parametrul primit nu e adresa!")
+            logger.error(str(self.xid) + ":" + str(address) + "is not a valid ip address!")
             return "INVALID"
         else:
-            newAddress = "%d.%d.%d.%d"%(int(address[0:2],base = 16),int(address[2:4],base = 16),int(address[4:6],base = 16),int(address[6:8],base = 16))
+            try:
+                newAddress = "%d.%d.%d.%d"%(int(address[0:2], base=16), int(address[2:4], base=16), int(address[4:6], base=16),int(address[6:8],base = 16))
+            except:
+                logger.error(str(self.xid) + ":" + address + "could't be converted in 16 base numbers!")
+                newAddress = 'INVALID'
             return newAddress
     def ipMacFormat(self,address):
         if len(address) != 32: #Adresa MAC are doar 6 octeti dar in mesaj are alocat 16 octeti
-            print("Parametrul primit nu e adresa!")
+            logger.error(str(self.xid) + ":" + address + "is not a valid mac address!")
             return "INVALID"
         else:
             newAddress = "%s-%s-%s-%s-%s-%s" % (address[0:2], address[2:4], address[4:6],address[6:8],address[8:10],address[10:12])
             return newAddress
     def nameFormat(self,name):
         if len(name) == 0:
+            logger.error(str(self.xid) + ":No name in message!")
             return "INVALID"
         else:
             newName = ""
@@ -134,7 +148,10 @@ class Message:
                 end += 2
             return newName
 
-
-
-
+    def verifyMessage(self):
+        if self.ciaddr == 'INVALID' or self.yiaddr == 'INVALID' or self.siaddr == 'INVALID' or self.giaddr == 'INVALID' or  self.chaddr == 'INVALID' or self.sname == 'INVALID' or self.file == 'INVALID':
+            return -1
+        for oprtion in self.options.keys():
+            if self.options[oprtion] == 'INVALID':
+                return -1
 
