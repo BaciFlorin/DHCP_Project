@@ -5,24 +5,16 @@ logger = logging.getLogger("console_logger")
 class SenderHandler():
     optionSendInDiscovery = {}
     leaseTime = {}
-    configurations = {
-        51: 5000,
-        54: '192.168.100.182',
-        1: '255.255.255.0',
-        3: '192.0.0.0, 192.1.1.1',
-        6: '192.168.100.69',
-        15: 'TataBaci',
-        28: '192.168.128.255',
-        58: 7220
-    }
+    configurations = {}
     
     
-    def __init__(self, _conn,_addr, _pool, _lock):
+    def __init__(self, _conn,_addr, _pool, _lock, _configurations):
         self.conn = _conn
         self.addr = _addr
         self.pool = _pool
         self.lock = _lock
         self.indicator = ''
+        self.configurations = _configurations
 
 
     def handle(self, message): # a fost start
@@ -33,7 +25,7 @@ class SenderHandler():
             self.indicator = str(message.xid)
             message = self.modifyMessage(type, message)
         else:
-            logger.critical(self.indicator + ":Type options is not in message!")
+            logger.critical(self.indicator + ":Type option is not in message!")
             return 'INVALID'
         return message
 
@@ -91,14 +83,14 @@ class SenderHandler():
                 logger.info(self.indicator + ":DHCPDISCOVER:Client gets the new ip:" + newIp.ip)
 
             if 51 in message.options:
-                requestedLeaseTime = message.options[51]
+                requestedLeaseTime = int(message.options[51])
                 if requestedLeaseTime >1000 and requestedLeaseTime<80000:
                     logger.info(self.indicator + ":DHCPDISCOVER:Client's requested lease time(" + str(requestedLeaseTime) + ") is a valid value!")
                 else:
                     logger.info(self.indicator + ":DHCPDISCOVER:Client's requested lease time(" + str(requestedLeaseTime) + ") is not a valid value!")
                     requestedLeaseTime = self.configurations[51]
                 message.options[51] = requestedLeaseTime
-                self.self.leaseTime[message.chaddr] = requestedLeaseTime
+                self.leaseTime[message.chaddr] = requestedLeaseTime
             else:
                 if message.chaddr in self.leaseTime:
                     logger.info(self.indicator + ":DHCPDISCOVER:Client gets a valid old lease time!")
@@ -109,11 +101,17 @@ class SenderHandler():
 
             message.options[53] = 'DHCPOFFER'
 
+            remove_options = [50, 61, 55]
             for i in message.options.keys():
-                if i != 50 and i != 53 and i != 51:
+                if i != 50 and i != 53 and i != 51 and i in self.configurations:
                     message.options[i] = self.configurations[i]
-                if i == 50 or i == 61 or i == 55:
-                    message.pop(i)
+                else:
+                    if i != 50 and i != 53 and i != 51:
+                        remove_options.append(i)
+
+            for roption in remove_options:
+                if roption in message.options.keys():
+                    message.options.pop(roption)
 
             self.optionSendInDiscovery[message.chaddr] = message.options
             logger.info(self.indicator + ":DHCPDISCOVER:DHCPOFFER ready to transmit!")
@@ -218,6 +216,6 @@ class SenderHandler():
     def messageSend(self,message, conn):
         pass
         if message != '':
-            self.conn.sendall(message.code())
+            pass
+            # self.conn.sendall(message.code())
 
-#sa incerci sa mai imparti in bucati functia de sus

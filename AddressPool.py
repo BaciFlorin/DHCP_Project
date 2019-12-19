@@ -7,6 +7,7 @@ class AddressPool():
         ip = []
         self.invertedMask = []
         self.nrIps = 0
+        self.broadcastAddress = ""
 
         for x in _ipAddress.split('.'):
             ip.append(int(x))
@@ -15,7 +16,7 @@ class AddressPool():
             self.invertedMask.append(255-int(x))
 
         #calculul numarului de ips din spatiu
-        for i in range(0,4):
+        for i in range(0, 4):
             if self.invertedMask[i] != 0:
                 self.nrIps += self.invertedMask[i]*pow(2,8*(3-i))
 
@@ -32,6 +33,14 @@ class AddressPool():
                         ip[1] = 0
                         ip[0] += 1
             self.ips.append(IPAddress(str(ip[0]) + '.' + str(ip[1]) + '.' + str(ip[2]) + '.' + str(ip[3])))
+        # atribuim penultima adresa din spatiu serverului si o scoatem din spatiul de adrese alocabil
+        self.server_identifier = str(ip[0]) + '.' + str(ip[1]) + '.' + str(ip[2]) + '.' + str(ip[3])
+        for client_ip in self.ips:
+            if client_ip.ip == self.server_identifier:
+                client = client_ip
+        self.ips.remove(client)
+        # determinam si adresa de broadcast din retea
+        self.broadcastAddress = str(ip[0]) + '.' + str(ip[1]) + '.' + str(ip[2]) + '.' + str(ip[3] + 1)
 
     def getFreeAddress(self,_mac):
         ip = 0

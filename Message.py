@@ -37,7 +37,8 @@ class Message:
         self.chaddr = 0
         self.sname = 0
         self.file = 0
-        self.options = 0
+        self.options = {}
+
     def messageSplit(self):
         startIndex = 0
         endIndex = 0
@@ -122,19 +123,22 @@ class Message:
             return "INVALID"
         else:
             try:
-                newAddress = "%d.%d.%d.%d"%(int(address[0:2], base=16), int(address[2:4], base=16), int(address[4:6], base=16),int(address[6:8],base = 16))
+                newAddress = "%d.%d.%d.%d" % (int(address[0:2], base=16), int(address[2:4], base=16), int(address[4:6],
+                                                base=16), int(address[6:8], base=16))
             except:
                 logger.error(str(self.xid) + ":" + address + "could't be converted in 16 base numbers!")
                 newAddress = 'INVALID'
             return newAddress
+
     def ipMacFormat(self,address):
         if len(address) != 32: #Adresa MAC are doar 6 octeti dar in mesaj are alocat 16 octeti
             logger.error(str(self.xid) + ":" + address + "is not a valid mac address!")
             return "INVALID"
         else:
-            newAddress = "%s-%s-%s-%s-%s-%s" % (address[0:2], address[2:4], address[4:6],address[6:8],address[8:10],address[10:12])
+            newAddress = "%s-%s-%s-%s-%s-%s" % (address[0:2], address[2:4], address[4:6], address[6:8], address[8:10], address[10:12])
             return newAddress
-    def nameFormat(self,name):
+
+    def nameFormat(self, name):
         if len(name) == 0:
             logger.error(str(self.xid) + ":No name in message!")
             return "INVALID"
@@ -143,7 +147,7 @@ class Message:
             start = 0
             end = 2
             while name[start:end] != "20" and end<=len(name):
-                newName += chr(int(name[start:end],base=16))
+                newName += chr(int(name[start:end], base=16))
                 start = end
                 end += 2
             return newName
