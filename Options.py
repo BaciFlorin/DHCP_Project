@@ -1,9 +1,16 @@
 import logging
-logger = logging.getLogger("console_logger")
+logger = logging.getLogger("message_logger")
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(message)s')
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
-available_options = [1, 3, 6, 15, 28, 58, 53, 51, 54, 55, 50]
+available_options = [1, 3, 6, 15, 28, 50, 51, 53, 54, 55, 58]
+
 
 class Options:
+
     DHCPMessageType = {
         1: "DHCPDISCOVER",
         2: "DHCPOFFER",
@@ -14,27 +21,25 @@ class Options:
         7: "DHCPRELEASE",
         8: "DHCPINFORM"
     }
-    def __init__(self, _options, _indicator):
+
+    def __init__(self, _options):
         self.options = _options
         self.OptionsData = {}
-        self.indicator = _indicator
 
     def optionSplit(self):
         Index = 2
         if self.options == "":
-            logger.info(self.indicator + ":No options!")
+            print("No options!")
         else:
             while Index < len(self.options):
-                code = int(self.options[Index-2:Index], base=10)
-                length = int(self.options[Index:Index+2], base=10) * 2
+                code = int(self.options[Index-2:Index], base=16)
+                length = int(self.options[Index:Index+2], base=16) * 2
                 if code in available_options:
                     self.OptionsData[code] = self.options[Index+2:Index+2+length]
-                Index += length + 6
-            self.optionDecode()
+                Index += length + 4
 
     def ipAddrFormat(self, address):
         if len(address) != 8:
-            logger.error(self.indicator + ":" + address + " is not an ip address!")
             return "INVALID"
         else:
             newAddress = "%d.%d.%d.%d" % (int(address[0:2], base=16), int(address[2:4], base=16), int(address[4:6], base=16),int(address[6:8], base=16))
@@ -42,20 +47,16 @@ class Options:
 
     def nameFormat(self, name):
         if len(name) == 0:
-            logger.error(self.indicator + ":No name in message!")
             return "INVALID"
         else:
-            try:
-                newName = ""
-                start = 0
-                end = 2
-                while end <= len(name):
-                    newName += chr(int(name[start:end], base=16))
-                    start = end
-                    end += 2
-                return newName
-            except:
-                return "INVALID"
+            newName = ""
+            start = 0
+            end = 2
+            while end <= len(name):
+                newName += chr(int(name[start:end], base=16))
+                start = end
+                end += 2
+            return newName
 
     def optionDecode(self):
         for i in self.OptionsData:
@@ -72,7 +73,7 @@ class Options:
                 while endIndex <= optionLen:
                     aux += self.ipAddrFormat(self.OptionsData[i][startIndex:endIndex])
                     if endIndex != optionLen:
-                        aux += ", "
+                        aux += " "
                     startIndex = endIndex
                     endIndex += 8
                 self.OptionsData[i] = aux
@@ -98,36 +99,37 @@ class Options:
             # Broadcast Address Option
             if i == 28:
                 self.OptionsData[i] = self.ipAddrFormat(self.OptionsData[i])
-            # Requested IP Address
+
+            # Requested ip address
             if i == 50:
                 self.OptionsData[i] = self.ipAddrFormat(self.OptionsData[i])
-            # Lease Time
+
+            # IP Address Lease Time
             if i == 51:
-                try:
-                    self.OptionsData[i] = int(self.OptionsData[i], base=10)
-                except:
-                    logger.error(self.indicator + ":Value at option 51 is not valid!")
-                    self.OptionsData[i] = 'INVALID'
+                self.OptionsData[i] = int(self.OptionsData[i], base=16)
 
             # DHCP Message Type
             if i == 53:
-                try:
-                    self.OptionsData[i] = self.DHCPMessageType[int(self.OptionsData[i], base=10)]
-                except:
-                    logger.error(self.indicator + ":Value at oprion 53 is not valid!")
-                    self.OptionsData[i] = 'INVALID'
+                self.OptionsData[i] = self.DHCPMessageType[int(self.OptionsData[i], base=10)]
 
             # Server Identifier
             if i == 54:
                 self.OptionsData[i] = self.ipAddrFormat(self.OptionsData[i])
 
+            # Parameter Request List
+            if i == 55:
+                requested_options = []
+                options = self.OptionsData[i]
+                ind = 0
+                while ind < len(options):
+                    requested_options.append(int(options[ind:ind+2], base=16))
+                    ind += 2
+                self.OptionsData[i] = [code for code in requested_options if code in available_options]
+
             # Renewal (T1) Time Value
             if i == 58:
-                try:
-                    self.OptionsData[i] = int(self.OptionsData[i],base = 16)
-                except:
-                    logger.error(self.indicator + ":Value at oprion 58 is not valid!")
-                    self.OptionsData[i] = 'INVALID'
+                self.OptionsData[i] = int(self.OptionsData[i], base=16)
+
 
 
 

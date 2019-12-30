@@ -17,10 +17,11 @@ name_of_options = {
     58: "Renewal Time Value:"
 }
 
+
 class DHCP_gui():
     available_options = [1, 3, 6, 15, 28, 58]
-
     configurations = {}
+
     def __init__(self, _master):
         self.master = _master
         self.initWindow()
@@ -48,18 +49,21 @@ class DHCP_gui():
         label2.grid(row=0, column=0, padx=3, pady=10)
         self.addr = Entry(pool_config_label_frame, width=25)
         self.addr.grid(row=0, column=1)
+        self.addr.insert(0, "192.168.0.0")
 
         # Input mask address
         label3 = Label(pool_config_label_frame, text="Mask:", font="Arial")
         label3.grid(row=1, column=0, padx=3, pady=10)
         self.mask = Entry(pool_config_label_frame, width=25)
         self.mask.grid(row=1, column=1)
+        self.mask.insert(0, "255.255.255.0")
 
         # Lease time input
         label4 = Label(pool_config_label_frame, text="Lease Time:", font="Arial")
         label4.grid(row=2, column=0, padx=3, pady=10)
         self.leaseTime = Entry(pool_config_label_frame, width=25)
         self.leaseTime.grid(row=2, column=1)
+        self.leaseTime.insert(0, "1000")
 
         # frame-ul unde se afla logul
         log_frame = LabelFrame(self.master, text="Activity log")
@@ -80,7 +84,7 @@ class DHCP_gui():
         option_frame.grid(row=1, column=1, sticky=(N, E, W, S), ipadx=10, ipady=10, padx=5, pady=5)
 
         # check buttons
-        self.values_for_oprtions = {}
+        self.values_for_options = {}
         self.checkbuttons = []
         i = 0
         for option in self.available_options:
@@ -88,7 +92,7 @@ class DHCP_gui():
             chk = Checkbutton(option_frame, text="Option " + str(option), variable=val)
             chk.grid(row=i, column=0, pady=5)
             self.checkbuttons.append(chk)
-            self.values_for_oprtions[option] = val
+            self.values_for_options[option] = val
             i += 1
 
         # entry for Options
@@ -129,9 +133,10 @@ class DHCP_gui():
             networkAddress = self.addr.get()
             networkMask = self.mask.get()
             self.pool = AddressPool.AddressPool(networkAddress, networkMask)
-            if self.values_for_oprtions[28].get() == 1:
+            if self.values_for_options[28].get() == 1:
                 self.configurations[28] = self.pool.broadcastAddress
             self.configurations[54] = self.pool.server_identifier
+            self.configurations[51] = int(self.leaseTime.get())
             print(self.configurations)
 
             self.lock = threading.Lock()
@@ -161,9 +166,7 @@ class DHCP_gui():
         self.clients_frame.delete_all_clients()
         logger.info("Server stopped!")
 
-
     def wait_connection(self):
-        initial_row = 0
         self.mainSocket.listen(1)
         while 1:
             try:
@@ -189,9 +192,14 @@ class DHCP_gui():
                 message = Message.Message(data)
                 err = message.messageSplit()
                 if err == -1:
+                    logger.info("Message incorrect!")
                     conn.close()
                     break
-                file_logger.info("RECEIVE:\n" + messageToString(message))
+                file_logger.info("RECEIVE:\n" + message.message_to_string())
+                if message.options[53] == 'DHCPRELEASE':
+                    lock.acquire()
+                    self.clients_frame.delete_client(message.xid)
+                    lock.release()
                 message = messageHandler.handle(message)
                 if message == 'INVALID':
                     logger.info("Connection closed!")
@@ -201,7 +209,8 @@ class DHCP_gui():
                     lock.acquire()
                     self.clients_frame.add_client(message.xid, message.chaddr, message.yiaddr)
                     lock.release()
-                file_logger.info("SEND:\n" + messageToString(message))
+
+                file_logger.info("SEND:\n" + message.message_to_string())
                 messageHandler.messageSend(message, conn)
 
     def poll_log_queue(self):
@@ -241,8 +250,8 @@ class DHCP_gui():
 
     def checkOptionsEntries(self):
         self.configurations.clear()
-        print([x for x in self.available_options if self.values_for_oprtions[x].get() == 1])
-        for option in [x for x in self.available_options if self.values_for_oprtions[x].get() == 1]:
+        print([x for x in self.available_options if self.values_for_options[x].get() == 1])
+        for option in [x for x in self.available_options if self.values_for_options[x].get() == 1]:
             data = ""
             if option != 28:
                 data = self.entryOfOptions[option].get()
@@ -348,26 +357,6 @@ class DHCP_gui():
                     return False
         return True
 
-
-def messageToString(message):
-    string_message = ""
-    string_message += "Message type:" + str(message.op) + "\n"
-    string_message += "Hardware type:" + str(message.hlen) + "\n"
-    string_message += "Hops:" + str(message.hops) + "\n"
-    string_message += "Transaction ID:" + str(message.xid) + "\n"
-    string_message += "Second elapsed:" + str(message.secs) + "\n"
-    string_message += "Bootp flags:" + str(message.flags) + "\n"
-    string_message += "Client IP address:" + message.ciaddr + "\n"
-    string_message += "Your (client) IP address:" + message.yiaddr + "\n"
-    string_message += "Next server IP address:" + message.siaddr + "\n"
-    string_message += "Relasy agent IP address:" + message.giaddr + "\n"
-    string_message += "Client MAC address:" + message.chaddr + "\n"
-    string_message += "Server host name:" + message.sname + "\n"
-    string_message += "Boot file name:" + message.file + "\n"
-    string_message += "Options:" + "\n"
-    for option in message.options.keys():
-        string_message += "\t" + str(option) + ":" + str(message.options[option]) + "\n"
-    return string_message
 
 if __name__ == '__main__':
     root = Tk()

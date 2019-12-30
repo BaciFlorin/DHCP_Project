@@ -37,8 +37,7 @@ class AddressPool():
         self.server_identifier = str(ip[0]) + '.' + str(ip[1]) + '.' + str(ip[2]) + '.' + str(ip[3])
         for client_ip in self.ips:
             if client_ip.ip == self.server_identifier:
-                client = client_ip
-        self.ips.remove(client)
+                self.ips.remove(client_ip)
         # determinam si adresa de broadcast din retea
         self.broadcastAddress = str(ip[0]) + '.' + str(ip[1]) + '.' + str(ip[2]) + '.' + str(ip[3] + 1)
 
@@ -82,16 +81,10 @@ class AddressPool():
                 ip = x
         return ip
 
-    def findAddressIP(self,_ip):
-        ip=0
+    def findAddressIP(self, _ip):
         for x in self.ips:
             if x.ip == _ip:
-                ip = x.ip
-                break
-        if ip==0:
-            #log in care sa precizezi ca nu exista adresa in spatiul ala
-            pass
-        return ip
+                return x
 
     def findOldAdress(self, _oldMac):
         ip = 0

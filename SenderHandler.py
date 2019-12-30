@@ -6,8 +6,7 @@ class SenderHandler():
     optionSendInDiscovery = {}
     leaseTime = {}
     configurations = {}
-    
-    
+        
     def __init__(self, _conn,_addr, _pool, _lock, _configurations):
         self.conn = _conn
         self.addr = _addr
@@ -16,10 +15,7 @@ class SenderHandler():
         self.indicator = ''
         self.configurations = _configurations
 
-
-    def handle(self, message): # a fost start
-        #functie de care imi identifica tipul de actiune pe care trebuie sa o iau
-        #functie care sa imi returneze ce mesaj sa fie trimis
+    def handle(self, message):
         type = self.identifieMessage(message.options)
         if type != '':
             self.indicator = str(message.xid)
@@ -29,21 +25,22 @@ class SenderHandler():
             return 'INVALID'
         return message
 
-    def identifieMessage(self,options):
+    def identifieMessage(self, options):
         type = ''
         if 53 in options:
             type = options[53]
         return type
 
-    def modifyMessage(self, typeOfMessage, message):
+    def modifyMessage(self, type_of_message, message):
         self.lock.acquire()
-        if typeOfMessage=='DHCPDISCOVER':
-            #sa ai grija si la cazurile in care se retrimite un DHCPDISCOVERY
+
+        if type_of_message == 'DHCPDISCOVER':
+            # sa ai grija si la cazurile in care se retrimite un DHCPDISCOVERY
             message.op = '02'
             oldIp = self.pool.findOldAdress(message.chaddr)
             if oldIp != 0:
                 if oldIp.free != 0 and oldIp.hold != 1:
-                    #cazul in care se ia o adresa care a fost deja a clientului respectiv
+                    # cazul in care se ia o adresa care a fost deja a clientului respectiv
                     message.yiaddr = oldIp.ip
                     oldIp.setMac(message.chaddr)
                     oldIp.holdAddress()
@@ -84,7 +81,7 @@ class SenderHandler():
 
             if 51 in message.options:
                 requestedLeaseTime = int(message.options[51])
-                if requestedLeaseTime >1000 and requestedLeaseTime<80000:
+                if 1000 < requestedLeaseTime < 8000:
                     logger.info(self.indicator + ":DHCPDISCOVER:Client's requested lease time(" + str(requestedLeaseTime) + ") is a valid value!")
                 else:
                     logger.info(self.indicator + ":DHCPDISCOVER:Client's requested lease time(" + str(requestedLeaseTime) + ") is not a valid value!")
@@ -99,29 +96,35 @@ class SenderHandler():
                     logger.info(self.indicator + ":DHCPDISCOVER:Client gets a default value!")
                     message.options[51] = self.configurations[51]
 
+            # change type of message
             message.options[53] = 'DHCPOFFER'
 
-            remove_options = [50, 61, 55]
-            for i in message.options.keys():
-                if i != 50 and i != 53 and i != 51 and i in self.configurations:
-                    message.options[i] = self.configurations[i]
-                else:
-                    if i != 50 and i != 53 and i != 51:
-                        remove_options.append(i)
+            # server identifier
+            message.options[54] = self.configurations[54]
 
-            for roption in remove_options:
-                if roption in message.options.keys():
+            # configure the other options
+            if 55 in message.options:
+                for option in message.options[55]:
+                    if option in self.configurations:
+                        message.options[option] = self.configurations[option]
+            else:
+                for i in message.options.keys():
+                    if i in self.configurations:
+                        message.options[i] = self.configurations[i]
+
+            # remove useless option
+            for roption in [option for option in message.options if option not in self.configurations and option != 53 and option != 51 and option != 54]:
                     message.options.pop(roption)
 
+            # save options send for the future use
             self.optionSendInDiscovery[message.chaddr] = message.options
             logger.info(self.indicator + ":DHCPDISCOVER:DHCPOFFER ready to transmit!")
 
-        elif typeOfMessage == 'DHCPREQUEST':
+        elif type_of_message == 'DHCPREQUEST':
             ipAlocated = self.pool.findAddressMAC(message.chaddr)
             if ipAlocated != 0:
                 if 54 in message.options:
                     #mesajul e un raspuns la DHCPOFFER
-                    message.options[50] = ipAlocated.ip
                     if ipAlocated.ip == message.options[50] and message.ciaddr == '0.0.0.0':
                         #SELECTING STATE
                         #verificam daca cumva mesajul nu este al altui server
@@ -136,6 +139,8 @@ class SenderHandler():
                         message.options[53] = 'DHCPACK'
                         ipAlocated.setAddress()
                         logger.info(self.indicator + ":DHCPREQUEST: DHCPACK ready to transmit!")
+                    else:
+                        return 'INVALID'
                 else:
                     if message.ciaddr == '0.0.0.0':
                         # INIT REBOOT
@@ -147,7 +152,7 @@ class SenderHandler():
                         tempip = message.options[50]
                         tempip = tempip.split('.')
                         for i in range(0, 3):
-                            tempip[i] = int(tempip)
+                            tempip[i] = int(tempip[i])
                             if self.pool.invertedMask[i] == 0:
                                 if tempip[i] != self.pool.ip[i]:
                                     logger.info(self.indicator
@@ -183,14 +188,14 @@ class SenderHandler():
                                 + ":DHCPREQUEST:No ip found in address pool for this mac address!")
                 return 'INVALID'
 
-        elif typeOfMessage == 'DHCPDECLINE':
+        elif type_of_message == 'DHCPDECLINE':
             ipAlocated = self.pool.findAddressMAC(message.chaddr)
             ipAlocated.unsetAddress()
             message = 'INVALID'
             logger.info(self.indicator
                             + ":DHCPDECLINE: IP address was released and connection closed!")
 
-        elif typeOfMessage == 'DHCPRELEASE':
+        elif type_of_message == 'DHCPRELEASE':
             #se elibereaza adresa, parametrii de configurare deja sunt salvati in dictionarul de sus
             ipAlocated = self.pool.findAddressMAC(message.chaddr)
             ipAlocated.unsetAddress()
@@ -198,7 +203,7 @@ class SenderHandler():
             logger.info(self.indicator
                             + ":DHCPRELEASE: IP address was released and connection closed!")
 
-        elif typeOfMessage == 'DHCPINFORM':
+        elif type_of_message == 'DHCPINFORM':
             ipAlocated = self.pool.findAddressMAC(message.chaddr)
             message.op = '02'
             message.yiaddr = ipAlocated.ip
@@ -214,8 +219,6 @@ class SenderHandler():
 
 
     def messageSend(self,message, conn):
-        pass
         if message != '':
-            pass
-            # self.conn.sendall(message.code())
+            conn.sendall(message.encode())
 
