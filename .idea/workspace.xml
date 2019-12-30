@@ -5,15 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7dd2dfdf-0f70-4550-a5cd-e316b9f4d7ef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Log/messagesFlow.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AddressPool.py" beforeDir="false" afterPath="$PROJECT_DIR$/AddressPool.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DHCP_gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/DHCP_gui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/Logging.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Message.py" beforeDir="false" afterPath="$PROJECT_DIR$/Message.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Options.py" beforeDir="false" afterPath="$PROJECT_DIR$/Options.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SenderHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/SenderHandler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AddressPool.py" beforeDir="false" afterPath="$PROJECT_DIR$/address_pool/AddressPool.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClientsPanel.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/ClientsPanel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DHCP_gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/DHCP_gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IPAddress.py" beforeDir="false" afterPath="$PROJECT_DIR$/address_pool/IPAddress.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/Log/Logging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Message.py" beforeDir="false" afterPath="$PROJECT_DIR$/packet/Message.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Options.py" beforeDir="false" afterPath="$PROJECT_DIR$/packet/Options.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SenderHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/protcol_logic/SenderHandler.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,43 +25,61 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SenderHandler.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/protcol_logic/SenderHandler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="25" column="22" lean-forward="true" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
+            <state relative-caret-position="1326">
+              <caret line="90" column="75" selection-start-line="90" selection-start-column="75" selection-end-line="90" selection-end-column="75" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/address_pool/AddressPool.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="8" column="22" lean-forward="true" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Message.py">
+        <entry file="file://$PROJECT_DIR$/gui/ClientsPanel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="150" selection-start-line="150" selection-end-line="150" />
+            <state relative-caret-position="17">
+              <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gui/DHCP_gui.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="154">
+              <caret line="208" column="34" selection-start-line="208" selection-start-column="34" selection-end-line="208" selection-end-column="34" />
               <folding>
-                <element signature="e#0#14#0" expanded="true" />
+                <element signature="e#0#21#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Options.py">
+        <entry file="file://$PROJECT_DIR$/address_pool/IPAddress.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="33" selection-start-line="33" selection-end-line="33" />
+            <state relative-caret-position="223">
+              <caret line="22" column="25" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="25" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DHCP_gui.py">
+        <entry file="file://$PROJECT_DIR$/packet/Message.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="200" column="65" lean-forward="true" selection-start-line="200" selection-start-column="65" selection-end-line="200" selection-end-column="65" />
+            <state relative-caret-position="281">
+              <caret line="294" column="33" lean-forward="true" selection-start-line="294" selection-start-column="33" selection-end-line="294" selection-end-column="33" />
               <folding>
-                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#0#26#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -84,11 +104,45 @@
       <find>typeOfMessage</find>
       <find>options</find>
       <find>Valoare invalida</find>
+      <find>oldmac</find>
+      <find>findOldAdress</find>
+      <find>find_old_address</find>
+      <find>updateInterfaceforStop</find>
+      <find>checkOptionsEntries</find>
+      <find>check_entries</find>
+      <find>checkEntries</find>
+      <find>identifieMessage</find>
+      <find>modifyMessage</find>
+      <find>old_mac</find>
+      <find>findAddressMAC</find>
+      <find>indicator</find>
+      <find>getFreeAddress</find>
+      <find>holdAddress</find>
+      <find>setLeaseTime</find>
+      <find>releaseAddress</find>
+      <find>unsetAddress</find>
+      <find>unsetAddressLock</find>
+      <find>setAddressUnreserved</find>
+      <find>setAddress</find>
+      <find>setAddressLock</find>
     </findStrings>
     <replaceStrings>
       <replace>logger</replace>
       <replace>self.leaseTime</replace>
       <replace>type_of_message</replace>
+      <replace>old_mac</replace>
+      <replace>find_old_address</replace>
+      <replace>update_interface_stop</replace>
+      <replace>check_option_entries</replace>
+      <replace>check_entries</replace>
+      <replace>get_type_of_message</replace>
+      <replace>get_free_address</replace>
+      <replace>make_address_unai</replace>
+      <replace>hold_address</replace>
+      <replace>release_address</replace>
+      <replace>make_ip_available</replace>
+      <replace>find_ip_after_mac</replace>
+      <replace>change_message_for_send</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -103,14 +157,20 @@
         <option value="$PROJECT_DIR$/client.py" />
         <option value="$PROJECT_DIR$/IPAddress.py" />
         <option value="$PROJECT_DIR$/DHCP_server.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/ClientsPanel.py" />
         <option value="$PROJECT_DIR$/Logging.py" />
         <option value="$PROJECT_DIR$/Options.py" />
-        <option value="$PROJECT_DIR$/DHCP_gui.py" />
         <option value="$PROJECT_DIR$/Message.py" />
-        <option value="$PROJECT_DIR$/AddressPool.py" />
+        <option value="$PROJECT_DIR$/DHCP_gui.py" />
         <option value="$PROJECT_DIR$/SenderHandler.py" />
+        <option value="$PROJECT_DIR$/AddressPool.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/packet/Options.py" />
+        <option value="$PROJECT_DIR$/Log/Logging.py" />
+        <option value="$PROJECT_DIR$/address_pool/IPAddress.py" />
+        <option value="$PROJECT_DIR$/address_pool/AddressPool.py" />
+        <option value="$PROJECT_DIR$/gui/DHCP_gui.py" />
+        <option value="$PROJECT_DIR$/protcol_logic/SenderHandler.py" />
       </list>
     </option>
   </component>
@@ -135,6 +195,26 @@
               <item name="DHCP_Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="DHCP_Project" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="DHCP_Project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DHCP_Project" type="462c0819:PsiDirectoryNode" />
+              <item name="address_pool" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DHCP_Project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DHCP_Project" type="462c0819:PsiDirectoryNode" />
+              <item name="gui" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DHCP_Project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DHCP_Project" type="462c0819:PsiDirectoryNode" />
+              <item name="packet" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DHCP_Project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DHCP_Project" type="462c0819:PsiDirectoryNode" />
+              <item name="protcol_logic" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -142,8 +222,17 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../02_Alte proiecte/raul/RC-Proiect" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/main.py" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Work time\Facultate\an3-semestrul 1\Retele de calculatoare\Proiect\01_Project\DHCP_Project\protcol_logic" />
+      <recent name="F:\Work time\Facultate\an3-semestrul 1\Retele de calculatoare\Proiect\01_Project\DHCP_Project\Log" />
+      <recent name="F:\Work time\Facultate\an3-semestrul 1\Retele de calculatoare\Proiect\01_Project\DHCP_Project\packet" />
+      <recent name="F:\Work time\Facultate\an3-semestrul 1\Retele de calculatoare\Proiect\01_Project\DHCP_Project\address_pool" />
+      <recent name="F:\Work time\Facultate\an3-semestrul 1\Retele de calculatoare\Proiect\01_Project\DHCP_Project\gui" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -157,28 +246,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.DHCP_gui">
-    <configuration name="DHCP_gui" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <module name="01_Project" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="C:\Users\Florin\AppData\Local\Programs\Python\Python37-32\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DHCP_gui.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.main1">
     <configuration name="DHCP_server" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="01_Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -200,7 +268,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="01_Project" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\Florin\AppData\Local\Programs\Python\Python37-32\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="01_Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -222,13 +311,13 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.DHCP_gui" />
       <item itemvalue="Python.main" />
+      <item itemvalue="Python.main1" />
       <item itemvalue="Python.DHCP_server" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
+        <item itemvalue="Python.main1" />
         <item itemvalue="Python.DHCP_server" />
       </list>
     </recent_temporary>
@@ -257,9 +346,9 @@
       <window_info id="DB Browser" order="4" />
       <window_info id="Job Explorer" order="5" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32976446" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3504823" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.34405145" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.329582" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3504823" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.34405145" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -303,6 +392,17 @@
       </list>
     </option>
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/protcol_logic/SenderHandler.py</url>
+          <line>140</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydevd_bundle/pydevd_comm.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -317,7 +417,6 @@
     <entry file="file://$PROJECT_DIR$/MoreInfo.txt" />
     <entry file="file://$PROJECT_DIR$/DHCP_server.py" />
     <entry file="file://$PROJECT_DIR$/test.log" />
-    <entry file="file://$PROJECT_DIR$/main.py" />
     <entry file="file://$PROJECT_DIR$/client.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/logging/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -349,17 +448,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/IPAddress.py">
+    <entry file="file://$PROJECT_DIR$/packet/Options.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
+        <state relative-caret-position="17">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/messagesFlow.log">
+    <entry file="file://$PROJECT_DIR$/Log/Logging.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="32" lean-forward="true" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="19" lean-forward="true" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Log/messagesFlow.log">
       <provider selected="true" editor-type-id="LogFileEditorProvider">
-        <state relative-caret-position="85">
-          <caret line="17" column="22" lean-forward="true" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
+        <state>
+          <caret lean-forward="true" />
         </state>
       </provider>
       <provider editor-type-id="text-editor">
@@ -368,65 +484,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Logging.py">
+    <entry file="file://$PROJECT_DIR$/address_pool/IPAddress.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="12" column="31" lean-forward="true" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
+        <state relative-caret-position="223">
+          <caret line="22" column="25" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/packet/Message.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="294" column="33" lean-forward="true" selection-start-line="294" selection-start-column="33" selection-end-line="294" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/threading.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="864" selection-start-line="864" selection-end-line="864" />
+        <state relative-caret-position="62">
+          <caret line="861" column="11" lean-forward="true" selection-start-line="861" selection-start-column="11" selection-end-line="861" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ClientsPanel.py">
+    <entry file="file://$PROJECT_DIR$/gui/ClientsPanel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-306">
+        <state relative-caret-position="17">
           <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DHCP_gui.py">
+    <entry file="file://$PROJECT_DIR$/gui/DHCP_gui.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="200" column="65" lean-forward="true" selection-start-line="200" selection-start-column="65" selection-end-line="200" selection-end-column="65" />
+        <state relative-caret-position="154">
+          <caret line="208" column="34" selection-start-line="208" selection-start-column="34" selection-end-line="208" selection-end-column="34" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Options.py">
+    <entry file="file://$PROJECT_DIR$/protcol_logic/SenderHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="33" selection-start-line="33" selection-end-line="33" />
+        <state relative-caret-position="1326">
+          <caret line="90" column="75" selection-start-line="90" selection-start-column="75" selection-end-line="90" selection-end-column="75" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Message.py">
+    <entry file="file://$PROJECT_DIR$/address_pool/AddressPool.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="150" selection-start-line="150" selection-end-line="150" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AddressPool.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="83" column="33" selection-start-line="83" selection-start-column="33" selection-end-line="83" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SenderHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="25" column="22" lean-forward="true" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
+        <state relative-caret-position="34">
+          <caret line="8" column="22" lean-forward="true" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
         </state>
       </provider>
     </entry>

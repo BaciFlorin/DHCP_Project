@@ -1,4 +1,5 @@
 import logging
+
 logger = logging.getLogger("message_logger")
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(message)s')

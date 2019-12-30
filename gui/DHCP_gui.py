@@ -2,12 +2,12 @@ from tkinter import *
 from tkinter import scrolledtext
 import socket
 import threading
-import SenderHandler
-import AddressPool
-import Message
+from protcol_logic import SenderHandler
+from address_pool import AddressPool
+from packet import Message
 import queue
-from ClientsPanel import *
-from Logging import *
+from gui.ClientsPanel import *
+from Log.Logging import *
 
 name_of_options = {
     1: "Subnet Mask:",
@@ -127,7 +127,7 @@ class DHCP_gui():
         exit()
 
     def start_server(self):
-        if self.checkEntries() and self.checkOptionsEntries():
+        if self.check_entries() and self.check_option_entries():
             self.updateInterfaceforStart()
 
             networkAddress = self.addr.get()
@@ -152,15 +152,12 @@ class DHCP_gui():
                 threading.Thread(target=self.wait_connection).start()
             except:
                 logger.fatal("Thread for wainting a connection couldn't start!")
-                self.pool = 0
                 self.mainSocket.close()
 
     def stop_server(self):
-        self.updateInterfaceforStop()
+        self.update_interface_stop()
         self.stop_threads = True
         self.mainSocket.close()
-        self.pool = 0
-        self.lock = 0
         for sock in self.clients_sockets:
             sock.close()
         self.clients_frame.delete_all_clients()
@@ -181,7 +178,7 @@ class DHCP_gui():
                 logger.log(logging.FATAL, "Thread for the client" + str(addr) + " couldn't start!")
 
     def com_thread(self, conn, addr, pool, lock):
-        messageHandler = SenderHandler.SenderHandler(conn, addr, pool, lock, self.configurations)
+        message_handler = SenderHandler.SenderHandler(conn, addr, pool, lock, self.configurations)
         while 1:
             try:
                 data = conn.recv(4096)
@@ -196,22 +193,20 @@ class DHCP_gui():
                     conn.close()
                     break
                 file_logger.info("RECEIVE:\n" + message.message_to_string())
+                logger.info(message.options[53] + " has been received!")
                 if message.options[53] == 'DHCPRELEASE':
                     lock.acquire()
                     self.clients_frame.delete_client(message.xid)
                     lock.release()
-                message = messageHandler.handle(message)
+                message = message_handler.handle(message, self.clients_frame)
                 if message == 'INVALID':
                     logger.info("Connection closed!")
                     conn.close()
                     break
-                if message.options[53] == 'DHCPACK':
-                    lock.acquire()
-                    self.clients_frame.add_client(message.xid, message.chaddr, message.yiaddr)
-                    lock.release()
 
                 file_logger.info("SEND:\n" + message.message_to_string())
-                messageHandler.messageSend(message, conn)
+                message_handler.messageSend(message, conn)
+                logger.info(message.options[53] + " has been send!")
 
     def poll_log_queue(self):
         # Check every 100ms if there is a new message in the queue to display
@@ -229,26 +224,24 @@ class DHCP_gui():
                 self.scrolled_text.yview(END)
         self.master.after(100, self.poll_log_queue)
 
-
-    def checkEntries(self):
+    def check_entries(self):
         ip = self.addr.get()
         mask = self.mask.get()
-        leaseTime = self.leaseTime.get()
+        lease_time = self.leaseTime.get()
         ip = ip.split('.')
         if not self.check_ip_address(ip, ""):
             return False
         mask = mask.split('.')
-        if not self.check_mask_address(mask,"", "Network"):
+        if not self.check_mask_address(mask, "", "Network"):
             return False
         try:
-            int(leaseTime)
+            int(lease_time)
         except:
-            logger.error("Lease time:" + str(leaseTime) + "is not a number!")
+            logger.error("Lease time:" + str(lease_time) + "is not a number!")
             return False
         return True
 
-
-    def checkOptionsEntries(self):
+    def check_option_entries(self):
         self.configurations.clear()
         print([x for x in self.available_options if self.values_for_options[x].get() == 1])
         for option in [x for x in self.available_options if self.values_for_options[x].get() == 1]:
@@ -287,11 +280,11 @@ class DHCP_gui():
         for chk in self.checkbuttons:
             chk["state"] = "disabled"
 
-        #disable entries for options
+        # disable entries for options
         for ent in self.entryOfOptions.values():
             ent["state"] = "disabled"
 
-    def updateInterfaceforStop(self):
+    def update_interface_stop(self):
         # channge start button
         self.startButton["text"] = "Start"
         self.startButton["command"] = self.start_server
@@ -320,7 +313,6 @@ class DHCP_gui():
                     return False
         return True
 
-
     def check_mask_address(self, data, option, mask_type):
         if len(data) != 4:
             logger.error("Invalid length of subnet mask!")
@@ -328,16 +320,16 @@ class DHCP_gui():
             return False
         else:
             suma = 0
-            validNumber = []
+            valid_number = []
             for x in range(7, 0, -1):
                 suma += pow(2, x)
-                validNumber.append(suma)
+                valid_number.append(suma)
             index = -1
             for ind in range(0, 3):
                 try:
                     nr = int(data[ind])
                     if nr != 255 and nr != 0:
-                        if nr not in validNumber:
+                        if nr not in valid_number:
                             logger.error(option + " " + mask_type + " mask:" + data[ind]
                                          + " is not a valid value for mask!")
                             self.configurations.clear()
@@ -356,11 +348,3 @@ class DHCP_gui():
                     self.configurations.clear()
                     return False
         return True
-
-
-if __name__ == '__main__':
-    root = Tk()
-    root.geometry("1080x650")
-    root.resizable(0, 0)
-    server = DHCP_gui(root)
-    root.mainloop()

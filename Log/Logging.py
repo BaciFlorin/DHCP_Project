@@ -8,7 +8,7 @@ logger.setLevel(logging.DEBUG)
 file_logger = logging.getLogger("message_logger")
 file_logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(message)s')
-handler = logging.FileHandler("messagesFlow.log", 'w')
+handler = logging.FileHandler("Log\messagesFlow.log", 'w')
 handler.setFormatter(formatter)
 file_logger.addHandler(handler)
 

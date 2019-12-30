@@ -1,4 +1,4 @@
-import Options
+from packet import Options
 import binascii
 
 class Message:
