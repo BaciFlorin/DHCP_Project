@@ -1,6 +1,6 @@
 
-class IPAddress():
-    def __init__(self,_ip):
+class IPAddress:
+    def __init__(self, _ip):
         self.ip = _ip
         self.mac = ""
         self.old_mac = ""

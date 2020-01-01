@@ -1,4 +1,42 @@
-2019-12-31 01:04:59,863 - RECEIVE:
+2020-01-01 16:19:45,149 - RECEIVE:
+Message type:01
+Hardware type:06
+Hops:00
+Transaction ID:28a248a3
+Second elapsed:0000
+Bootp flags:8000
+Client IP address:0.0.0.0
+Your (client) IP address:0.0.0.0
+Next server IP address:0.0.0.0
+Relasy agent IP address:0.0.0.0
+Client MAC address:92:39:e5:9f:ec:af
+Server host name:
+Boot file name:
+Options:
+	53:DHCPDISCOVER
+	50:192.168.0.21
+	55:[1, 3, 6]
+
+2020-01-01 16:19:45,150 - SEND:
+Message type:02
+Hardware type:06
+Hops:00
+Transaction ID:28a248a3
+Second elapsed:0000
+Bootp flags:8000
+Client IP address:0.0.0.0
+Your (client) IP address:192.168.0.21
+Next server IP address:0.0.0.0
+Relasy agent IP address:0.0.0.0
+Client MAC address:92:39:e5:9f:ec:af
+Server host name:
+Boot file name:
+Options:
+	53:DHCPOFFER
+	51:1000
+	54:192.168.0.254
+
+2020-01-01 16:19:47,500 - RECEIVE:
 Message type:01
 Hardware type:06
 Hops:00
@@ -17,7 +55,7 @@ Options:
 	50:192.168.0.117
 	55:[1, 15, 3, 6]
 
-2019-12-31 01:04:59,884 - SEND:
+2020-01-01 16:19:47,501 - SEND:
 Message type:02
 Hardware type:06
 Hops:00
@@ -34,80 +72,5 @@ Boot file name:
 Options:
 	53:DHCPOFFER
 	51:1000
-	54:192.168.0.254
-
-2019-12-31 01:05:01,887 - RECEIVE:
-Message type:01
-Hardware type:06
-Hops:00
-Transaction ID:28a248a3
-Second elapsed:0000
-Bootp flags:8000
-Client IP address:0.0.0.0
-Your (client) IP address:0.0.0.0
-Next server IP address:0.0.0.0
-Relasy agent IP address:0.0.0.0
-Client MAC address:94:39:e5:9f:ec:af
-Server host name:
-Boot file name:
-Options:
-	53:DHCPREQUEST
-	50:192.168.0.117
-	54:192.168.0.254
-	55:[1, 15, 3, 6]
-
-2019-12-31 01:05:01,946 - SEND:
-Message type:02
-Hardware type:06
-Hops:00
-Transaction ID:28a248a3
-Second elapsed:0000
-Bootp flags:8000
-Client IP address:0.0.0.0
-Your (client) IP address:192.168.0.117
-Next server IP address:0.0.0.0
-Relasy agent IP address:0.0.0.0
-Client MAC address:94:39:e5:9f:ec:af
-Server host name:
-Boot file name:
-Options:
-	53:DHCPACK
-	51:1000
-	54:192.168.0.254
-
-2019-12-31 01:05:06,949 - RECEIVE:
-Message type:01
-Hardware type:06
-Hops:00
-Transaction ID:28a248a3
-Second elapsed:0000
-Bootp flags:8000
-Client IP address:0.0.0.0
-Your (client) IP address:0.0.0.0
-Next server IP address:0.0.0.0
-Relasy agent IP address:0.0.0.0
-Client MAC address:94:39:e5:9f:ec:af
-Server host name:
-Boot file name:
-Options:
-	53:DHCPINFORM
-	55:[1, 15, 3, 6]
-
-2019-12-31 01:05:12,965 - SEND:
-Message type:02
-Hardware type:06
-Hops:00
-Transaction ID:28a248a3
-Second elapsed:0000
-Bootp flags:8000
-Client IP address:0.0.0.0
-Your (client) IP address:192.168.0.117
-Next server IP address:0.0.0.0
-Relasy agent IP address:0.0.0.0
-Client MAC address:94:39:e5:9f:ec:af
-Server host name:
-Boot file name:
-Options:
-	53:DHCPACK
 	54:192.168.0.254
 

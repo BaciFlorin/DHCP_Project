@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import scrolledtext
 import socket
 import threading
-from protcol_logic import SenderHandler
+from protocol_logic import SenderHandler
 from address_pool import AddressPool
 from packet import Message
 import queue
@@ -25,8 +25,6 @@ class DHCP_gui():
     def __init__(self, _master):
         self.master = _master
         self.initWindow()
-        self.stop_threads = False
-        self.clients_sockets = []
 
         # Create a logging handler using a queue
         self.log_queue = queue.Queue()
@@ -139,74 +137,67 @@ class DHCP_gui():
             self.configurations[51] = int(self.leaseTime.get())
             print(self.configurations)
 
+            self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
             self.lock = threading.Lock()
+            self.server_socket.bind(('', 67))
 
-            self.mainSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.message_handler = SenderHandler.SenderHandler(self.server_socket, self.pool, self.configurations)
 
-            hostname = socket.gethostname()
-            ipAddress = socket.gethostbyname(hostname)
-            self.mainSocket.bind(('127.0.0.1', 5000))
-
-            logger.info("Wait for connection....")
+            # wait for messages
+            logger.info("Wait for messages....")
             try:
-                threading.Thread(target=self.wait_connection).start()
+                threading.Thread(target=self.wait_for_messages).start()
             except:
-                logger.fatal("Thread for wainting a connection couldn't start!")
-                self.mainSocket.close()
+                logger.error("Thread can't be started!")
+
+    def wait_for_messages(self):
+        while 1:
+            try:
+                msg = self.server_socket.recvfrom(4096)
+            except:
+                break
+            if msg:
+                try:
+                    threading.Thread(target=self.functie, args=(msg[0], 1)).start()
+                except:
+                    logger.error("Thread can't be started!")
 
     def stop_server(self):
         self.update_interface_stop()
-        self.stop_threads = True
-        self.mainSocket.close()
-        for sock in self.clients_sockets:
-            sock.close()
+        self.server_socket.close()
         self.clients_frame.delete_all_clients()
         logger.info("Server stopped!")
 
-    def wait_connection(self):
-        self.mainSocket.listen(1)
-        while 1:
-            try:
-                conn, addr = self.mainSocket.accept()
-                self.clients_sockets.append(conn)
-            except:
-                break
-            logger.log(logging.INFO, 'S-a conectat:' + str(addr) + "!")
-            try:
-                threading.Thread(target=self.com_thread, args=(conn, addr, self.pool, self.lock)).start()
-            except:
-                logger.log(logging.FATAL, "Thread for the client" + str(addr) + " couldn't start!")
+    def functie(self, msg, nr):
+        msg = msg.decode("utf-8")
+        message = Message.Message(msg)
+        err = message.messageSplit()
+        if err == -1:
+            logger.info("Message incorrect!")
+            return
+        file_logger.info("RECEIVE:\n" + message.message_to_string())
+        logger.info(message.options[53] + " has been received!")
+        if message.options[53] == 'DHCPRELEASE':
+            self.lock.acquire()
+            self.clients_frame.delete_client(message.xid)
+            self.lock.release()
+        self.lock.acquire()
+        message = self.message_handler.handle(message, self.clients_frame)
+        self.lock.release()
+        if message == 'INVALID':
+            return
+        if message.options[53] == 'DHCPACK':
+            self.lock.acquire()
+            self.clients_frame.add_client(message.xid, message.chaddr, message.yiaddr)
+            self.lock.release()
 
-    def com_thread(self, conn, addr, pool, lock):
-        message_handler = SenderHandler.SenderHandler(conn, addr, pool, lock, self.configurations)
-        while 1:
-            try:
-                data = conn.recv(4096)
-            except:
-                break
-            if data:
-                data = data.decode("utf-8")
-                message = Message.Message(data)
-                err = message.messageSplit()
-                if err == -1:
-                    logger.info("Message incorrect!")
-                    conn.close()
-                    break
-                file_logger.info("RECEIVE:\n" + message.message_to_string())
-                logger.info(message.options[53] + " has been received!")
-                if message.options[53] == 'DHCPRELEASE':
-                    lock.acquire()
-                    self.clients_frame.delete_client(message.xid)
-                    lock.release()
-                message = message_handler.handle(message, self.clients_frame)
-                if message == 'INVALID':
-                    logger.info("Connection closed!")
-                    conn.close()
-                    break
-
-                file_logger.info("SEND:\n" + message.message_to_string())
-                message_handler.messageSend(message, conn)
-                logger.info(message.options[53] + " has been send!")
+        file_logger.info("SEND:\n" + message.message_to_string())
+        self.lock.acquire()
+        self.message_handler.send(self.server_socket, message)
+        self.lock.release()
+        logger.info(message.options[53] + " has been send!")
 
     def poll_log_queue(self):
         # Check every 100ms if there is a new message in the queue to display

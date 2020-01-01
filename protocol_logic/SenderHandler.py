@@ -1,6 +1,7 @@
 import logging
 
 logger = logging.getLogger("console_logger")
+client_port = 68
 
 
 class SenderHandler:
@@ -8,12 +9,11 @@ class SenderHandler:
     leaseTime = {}
     configurations = {}
         
-    def __init__(self, _conn, _addr, _pool, _lock, _configurations):
+    def __init__(self, _conn, _pool, _configurations):
         self.conn = _conn
-        self.addr = _addr
         self.pool = _pool
-        self.lock = _lock
         self.configurations = _configurations
+        self.destination = ("255.255.255.255", client_port)
 
     def handle(self, message, clients_display):
         if self.get_type_of_message(message.options) != '':
@@ -27,12 +27,10 @@ class SenderHandler:
         return options[53]
 
     def change_message_for_send(self, type_of_message, message, clients_display):
-        self.lock.acquire()
-
         if type_of_message == 'DHCPDISCOVER':
             message.op = '02'
             message.yiaddr = self.pool.get_a_new_ip_for_client(message.chaddr, message.options)
-            logger.info("Client gets the this ip:" + message.yiaddr + "!")
+            logger.info("Client gets this ip:" + message.yiaddr + "!")
 
             if 51 in message.options:
                 requested_lease_time = int(message.options[51])
@@ -81,7 +79,6 @@ class SenderHandler:
                             logger.info("Message received is for another server!")
                             ip_allocated.releaseAddress()
                             return 'INVALID'
-
                         message.op = '02'
                         message.yiaddr = ip_allocated.ip
                         message.options = self.optionSendInDiscovery[message.chaddr]
@@ -145,9 +142,8 @@ class SenderHandler:
             message.options.pop(51)
             message.options[53] = 'DHCPACK'
             logger.info("Message ready to transmit, client will be inform about his configurations!")
-        self.lock.release()
         return message
 
-    def messageSend(self, message, conn):
+    def send(self, socket, message):
         if message != '':
-            conn.sendall(message.encode())
+            socket.sendto(message.encode(), self.destination)
